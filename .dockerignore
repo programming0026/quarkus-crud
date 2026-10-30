@@ -1,0 +1,11 @@
+.git
+.mvn
+target/
+*.log
+*.tmp
+.DS_Store
+*.class
+*.jar
+!run.sh
+!pom.xml
+!src/

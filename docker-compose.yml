@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    networks:
+      - quarkus-network
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+      MYSQL_DATABASE: crud_db
+      MYSQL_USER: quarkus
+      MYSQL_PASSWORD: quarkus123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  quarkus:
+    image: quarkus:1.0.0
+    container_name: quarkus-crud
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/crud_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: quarkus
+      SPRING_DATASOURCE_PASSWORD: quarkus123
+    networks:
+      - quarkus-network
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  
+networks:
+  quarkus-network:
+    driver: bridge
