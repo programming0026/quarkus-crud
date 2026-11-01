@@ -21,7 +21,7 @@ class UserIntegrationTest {
     @BeforeEach
     @Transactional
     void setUp() {
-        // Clean database before each test
+        // Limpia la base de datos antes de cada prueba
         userRepository.deleteAll();
     }
 
@@ -29,7 +29,7 @@ class UserIntegrationTest {
     void testCompleteUserLifecycle() {
         CreateUserDTO newUser = new CreateUserDTO("Integration User", "integration@test.com", "555-1234", "Integration City");
 
-        // 1. Create user
+        // 1. Crear el usuario
         Integer userId = given()
             .contentType(ContentType.JSON)
             .body(newUser)
@@ -41,7 +41,7 @@ class UserIntegrationTest {
                 .body("email", equalTo("integration@test.com"))
                 .extract().path("id");
 
-        // 2. Get user by ID
+        // 2. Consultar el usuario por identificador
         given()
             .pathParam("id", userId)
             .when()
@@ -51,7 +51,7 @@ class UserIntegrationTest {
                 .body("name", equalTo("Integration User"))
                 .body("email", equalTo("integration@test.com"));
 
-        // 3. Get user by email
+        // 3. Consultar el usuario por correo
         given()
             .pathParam("email", "integration@test.com")
             .when()
@@ -60,7 +60,7 @@ class UserIntegrationTest {
                 .statusCode(200)
                 .body("name", equalTo("Integration User"));
 
-        // 4. Update user
+        // 4. Actualizar el usuario
         CreateUserDTO updateUser = new CreateUserDTO("Updated Integration User", "updated-integration@test.com", "555-9876", "Updated City");
         
         given()
@@ -74,7 +74,7 @@ class UserIntegrationTest {
                 .body("name", equalTo("Updated Integration User"))
                 .body("email", equalTo("updated-integration@test.com"));
 
-        // 5. Verify update
+        // 5. Verificar la actualización
         given()
             .pathParam("id", userId)
             .when()
@@ -84,7 +84,7 @@ class UserIntegrationTest {
                 .body("name", equalTo("Updated Integration User"))
                 .body("email", equalTo("updated-integration@test.com"));
 
-        // 6. Delete user
+        // 6. Eliminar el usuario
         given()
             .pathParam("id", userId)
             .when()
@@ -92,7 +92,7 @@ class UserIntegrationTest {
             .then()
                 .statusCode(204);
 
-        // 7. Verify deletion
+        // 7. Verificar la eliminación
         given()
             .pathParam("id", userId)
             .when()
@@ -103,12 +103,12 @@ class UserIntegrationTest {
 
     @Test
     void testMultipleUsersCreationAndRetrieval() {
-        // Create multiple users
+        // Crea varios usuarios
         CreateUserDTO user1 = new CreateUserDTO("User One", "user1@test.com", "111-1111", "City One");
         CreateUserDTO user2 = new CreateUserDTO("User Two", "user2@test.com", "222-2222", "City Two");
         CreateUserDTO user3 = new CreateUserDTO("User Three", "user3@test.com", "333-3333", "City Three");
 
-        // Create users
+        // Crea usuarios.
         given()
             .contentType(ContentType.JSON)
             .body(user1)
@@ -133,7 +133,7 @@ class UserIntegrationTest {
             .then()
                 .statusCode(201);
 
-        // Get all users and verify count
+        // Consulta todos los usuarios y verifica la cantidad
         given()
             .when()
                 .get("/users")
@@ -149,7 +149,7 @@ class UserIntegrationTest {
         CreateUserDTO user1 = new CreateUserDTO("User One", "same@email.com", "111-1111", "City One");
         CreateUserDTO user2 = new CreateUserDTO("User Two", "same@email.com", "222-2222", "City Two");
 
-        // Create first user
+        // Crea usuario primero.
         given()
             .contentType(ContentType.JSON)
             .body(user1)
@@ -158,7 +158,7 @@ class UserIntegrationTest {
             .then()
                 .statusCode(201);
 
-        // Try to create second user with same email
+        // Intenta crear un segundo usuario con el mismo correo
         given()
             .contentType(ContentType.JSON)
             .body(user2)
@@ -171,7 +171,7 @@ class UserIntegrationTest {
 
     @Test
     void testValidationErrors() {
-        // Test empty name
+        // Prueba con nombre vacío
         CreateUserDTO invalidUser1 = new CreateUserDTO("", "valid@email.com", "123-4567", "City");
         
         given()
@@ -184,7 +184,7 @@ class UserIntegrationTest {
                 .body("title", equalTo("Constraint Violation"))
                 .body("violations.message", hasItem(containsString("nombre es obligatorio")));
 
-        // Test invalid email
+        // Prueba con correo inválido
         CreateUserDTO invalidUser2 = new CreateUserDTO("Valid Name", "invalid-email", "123-4567", "City");
         
         given()
@@ -196,7 +196,7 @@ class UserIntegrationTest {
                 .statusCode(400)
                 .body("violations.message", hasItem(containsString("email inválido")));
 
-        // Test name too long
+        // Prueba con nombre demasiado largo
         String longName = "a".repeat(60); // Exceeds 50 character limit
         CreateUserDTO invalidUser3 = new CreateUserDTO(longName, "valid@email.com", "123-4567", "City");
         
@@ -212,7 +212,7 @@ class UserIntegrationTest {
 
     @Test
     void testUpdateWithSameEmail() {
-        // Create a user
+        // Crea un usuario
         CreateUserDTO newUser = new CreateUserDTO("Test User", "test@email.com", "123-4567", "Test City");
         
         Integer userId = given()
@@ -224,7 +224,7 @@ class UserIntegrationTest {
                 .statusCode(201)
                 .extract().path("id");
 
-        // Update with same email (should be allowed)
+        // Actualiza con el mismo correo (debe permitirse)
         CreateUserDTO updateUser = new CreateUserDTO("Updated Test User", "test@email.com", "987-6543", "Updated City");
         
         given()
@@ -241,7 +241,7 @@ class UserIntegrationTest {
 
     @Test
     void testConcurrentOperations() {
-        // Create base user
+        // Crea usuario de base.
         CreateUserDTO user = new CreateUserDTO("Concurrent User", "concurrent@test.com", "555-0000", "Concurrent City");
         
         Integer userId = given()
@@ -253,7 +253,7 @@ class UserIntegrationTest {
                 .statusCode(201)
                 .extract().path("id");
 
-        // Simulate concurrent reads (should all succeed)
+        // Simula lecturas concurrentes (todas deben tener éxito)
         for (int i = 0; i < 5; i++) {
             given()
                 .pathParam("id", userId)
@@ -264,7 +264,7 @@ class UserIntegrationTest {
                     .body("name", equalTo("Concurrent User"));
         }
 
-        // Test multiple gets by email
+        // Prueba varias consultas por correo
         for (int i = 0; i < 5; i++) {
             given()
                 .pathParam("email", "concurrent@test.com")

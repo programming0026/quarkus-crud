@@ -19,10 +19,10 @@ class UserTest {
 
     @Test
     void testDefaultConstructor() {
-        // Given & When
+        // Dado y cuando
         User newUser = new User();
 
-        // Then
+        // Entonces
         assertNull(newUser.name);
         assertNull(newUser.email);
         assertNull(newUser.phone);
@@ -33,10 +33,10 @@ class UserTest {
 
     @Test
     void testParameterizedConstructor() {
-        // Given & When
+        // Dado y cuando
         User newUser = new User("Test User", "test@email.com", "123-456-7890", "Test City");
 
-        // Then
+        // Entonces
         assertEquals("Test User", newUser.name);
         assertEquals("test@email.com", newUser.email);
         assertEquals("123-456-7890", newUser.phone);
@@ -45,10 +45,10 @@ class UserTest {
 
     @Test
     void testParameterizedConstructorWithNullValues() {
-        // Given & When
+        // Dado y cuando
         User newUser = new User("Test User", "test@email.com", null, null);
 
-        // Then
+        // Entonces
         assertEquals("Test User", newUser.name);
         assertEquals("test@email.com", newUser.email);
         assertNull(newUser.phone);
@@ -57,7 +57,7 @@ class UserTest {
 
     @Test
     void testSetterAndGetterMethods() {
-        // Given & When
+        // Dado y cuando
         user.name = "Updated User";
         user.email = "updated@email.com";
         user.phone = "987-654-3210";
@@ -67,7 +67,7 @@ class UserTest {
         user.createdAt = now;
         user.updatedAt = now;
 
-        // Then
+        // Entonces
         assertEquals("Updated User", user.name);
         assertEquals("updated@email.com", user.email);
         assertEquals("987-654-3210", user.phone);
@@ -78,15 +78,15 @@ class UserTest {
 
     @Test
     void testTimestampFields() {
-        // Given
+        // Dado
         LocalDateTime createdTime = LocalDateTime.of(2024, 1, 1, 10, 0, 0);
         LocalDateTime updatedTime = LocalDateTime.of(2024, 1, 2, 10, 0, 0);
 
-        // When
+        // Cuando
         user.createdAt = createdTime;
         user.updatedAt = updatedTime;
 
-        // Then
+        // Entonces
         assertEquals(createdTime, user.createdAt);
         assertEquals(updatedTime, user.updatedAt);
         assertTrue(user.updatedAt.isAfter(user.createdAt));
@@ -94,19 +94,19 @@ class UserTest {
 
     @Test
     void testMaxLengthFields() {
-        // Given
+        // Dado
         String maxName = "a".repeat(50);
         String maxEmail = "a".repeat(90) + "@test.com"; // Close to 100 char limit
         String maxPhone = "1".repeat(20);
         String maxCity = "C".repeat(100);
 
-        // When
+        // Cuando
         user.name = maxName;
         user.email = maxEmail;
         user.phone = maxPhone;
         user.city = maxCity;
 
-        // Then
+        // Entonces
         assertEquals(50, user.name.length());
         assertTrue(user.email.length() <= 100);
         assertEquals(20, user.phone.length());
@@ -115,13 +115,13 @@ class UserTest {
 
     @Test
     void testEmptyStringFields() {
-        // Given & When
+        // Dado y cuando
         user.name = "";
         user.email = "";
         user.phone = "";
         user.city = "";
 
-        // Then
+        // Entonces
         assertEquals("", user.name);
         assertEquals("", user.email);
         assertEquals("", user.phone);

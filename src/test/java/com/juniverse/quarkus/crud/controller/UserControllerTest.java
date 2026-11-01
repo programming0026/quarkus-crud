@@ -24,10 +24,10 @@ class UserControllerTest {
     @BeforeEach
     @Transactional
     void setUp() {
-        // Clean existing data
+        // Limpia los datos existentes
         userRepository.deleteAll();
         
-        // Create test user
+        // Crea usuario de prueba.
         testUser = new User("Test User", "test@controller.com", "123-456-7890", "Test City");
         userRepository.persist(testUser);
     }
@@ -126,7 +126,7 @@ class UserControllerTest {
 
     @Test
     void testCreateUser_MissingRequiredFields_ShouldReturn400() {
-        // Send empty object
+        // Envía objeto vacío.
         given()
             .contentType(ContentType.JSON)
             .body("{}")
@@ -172,7 +172,7 @@ class UserControllerTest {
 
     @Test
     void testUpdateUser_DuplicateEmail_ShouldReturn409() {
-        // First create another user via API to avoid transaction conflicts
+        // Primero crea otro usuario por la API para evitar conflictos de transacción
         CreateUserDTO newUser = new CreateUserDTO("Another User", "another@email.com", "111-2222", "Another City");
         
         Integer anotherUserId = given()
@@ -184,7 +184,7 @@ class UserControllerTest {
                 .statusCode(201)
                 .extract().path("id");
 
-        // Now try to update testUser with the same email
+        // Ahora intenta actualizar testUser con el mismo correo
         CreateUserDTO updateUser = new CreateUserDTO("Updated User", "another@email.com", "999-8888", "Updated City");
 
         given()
@@ -223,7 +223,7 @@ class UserControllerTest {
             .then()
                 .statusCode(204);
 
-        // Verify user was deleted
+        // Verifica que el usuario se eliminó
         given()
             .pathParam("id", testUser.id)
             .when()
@@ -301,7 +301,7 @@ class UserControllerTest {
 
     @Test
     void testGetAllUsers_WithExistingData_ShouldReturnUsers() {
-        // This test verifies that getAllUsers returns the test user created in setUp
+        // Esta prueba verifica que getAllUsers devuelva el usuario creado en setUp
         given()
             .when()
                 .get("/users")

@@ -23,11 +23,11 @@ class UserRepositoryTest {
     @BeforeEach
     @Transactional
     void setUp() {
-        // Clean existing data
+        // Limpia los datos existentes
         userRepository.deleteAll();
         userRepository.flush();
         
-        // Create test user
+        // Crea usuario de prueba.
         testUser = new User("Test User", "test@repository.com", "123-456-7890", "Test City");
         userRepository.persist(testUser);
         userRepository.flush();
@@ -36,10 +36,10 @@ class UserRepositoryTest {
     @Test
     @Transactional
     void testFindByEmail_ExistingEmail_ShouldReturnUser() {
-        // When
+        // Cuando
         Optional<User> result = userRepository.findByEmail("test@repository.com");
 
-        // Then
+        // Entonces
         assertTrue(result.isPresent());
         assertEquals("Test User", result.get().name);
         assertEquals("test@repository.com", result.get().email);
@@ -48,79 +48,79 @@ class UserRepositoryTest {
     @Test
     @Transactional
     void testFindByEmail_NonExistingEmail_ShouldReturnEmpty() {
-        // When
+        // Cuando
         Optional<User> result = userRepository.findByEmail("nonexistent@email.com");
 
-        // Then
+        // Entonces
         assertFalse(result.isPresent());
     }
 
     @Test
     @Transactional
     void testExistsByEmail_ExistingEmail_ShouldReturnTrue() {
-        // When
+        // Cuando
         boolean exists = userRepository.existsByEmail("test@repository.com");
 
-        // Then
+        // Entonces
         assertTrue(exists);
     }
 
     @Test
     @Transactional
     void testExistsByEmail_NonExistingEmail_ShouldReturnFalse() {
-        // When
+        // Cuando
         boolean exists = userRepository.existsByEmail("nonexistent@email.com");
 
-        // Then
+        // Entonces
         assertFalse(exists);
     }
 
     @Test
     @Transactional
     void testExistsByEmailAndIdNot_SameEmailDifferentId_ShouldReturnTrue() {
-        // Given - Create another user with same email (this test specifically needs to bypass unique constraint)
-        // We'll use a different email for the test user setup and check for duplicates
+        // Dado: se crea otro usuario con el mismo correo (esta prueba necesita evitar la restricción de unicidad)
+        // Se usa otro correo en la preparación del usuario de prueba y se revisan los duplicados
         User anotherUser = new User("Another User", "different@email.com", "098-765-4321", "Another City");
         userRepository.persist(anotherUser);
         userRepository.flush();
 
-        // When - Check if there's another user with testUser's email (but different ID)
+        // Cuando: se comprueba si hay otro usuario con el correo de testUser (pero distinto identificador)
         boolean exists = userRepository.existsByEmailAndIdNot("test@repository.com", anotherUser.id);
 
-        // Then - Should return true because testUser exists with that email and different ID
+        // Entonces: debe devolver verdadero porque testUser existe con ese correo y otro identificador
         assertTrue(exists);
     }
 
     @Test
     @Transactional
     void testExistsByEmailAndIdNot_SameEmailSameId_ShouldReturnFalse() {
-        // When
+        // Cuando
         boolean exists = userRepository.existsByEmailAndIdNot("test@repository.com", testUser.id);
 
-        // Then
+        // Entonces
         assertFalse(exists);
     }
 
     @Test
     @Transactional
     void testExistsByEmailAndIdNot_DifferentEmail_ShouldReturnFalse() {
-        // When
+        // Cuando
         boolean exists = userRepository.existsByEmailAndIdNot("different@email.com", testUser.id);
 
-        // Then
+        // Entonces
         assertFalse(exists);
     }
 
     @Test
     @Transactional
     void testPersistAndFind_ShouldWorkCorrectly() {
-        // Given
+        // Dado
         User newUser = new User("New User", "new@email.com", "555-0000", "New City");
 
-        // When
+        // Cuando
         userRepository.persist(newUser);
 
-        // Then
+        // Entonces
         assertNotNull(newUser.id);
         Optional<User> found = userRepository.findByIdOptional(newUser.id);
         assertTrue(found.isPresent());
@@ -130,10 +130,10 @@ class UserRepositoryTest {
     @Test
     @Transactional
     void testDeleteById_ExistingUser_ShouldReturnTrue() {
-        // When
+        // Cuando
         boolean deleted = userRepository.deleteById(testUser.id);
 
-        // Then
+        // Entonces
         assertTrue(deleted);
         Optional<User> found = userRepository.findByIdOptional(testUser.id);
         assertFalse(found.isPresent());
@@ -142,19 +142,19 @@ class UserRepositoryTest {
     @Test
     @Transactional
     void testDeleteById_NonExistingUser_ShouldReturnFalse() {
-        // When
+        // Cuando
         boolean deleted = userRepository.deleteById(999L);
 
-        // Then
+        // Entonces
         assertFalse(deleted);
     }
 
     @Test
     void testListAll_ShouldReturnAllUsers() {
-        // When
+        // Cuando
         var users = userRepository.listAll();
 
-        // Then
+        // Entonces
         assertFalse(users.isEmpty());
         assertEquals(1, users.size());
         assertEquals("Test User", users.get(0).name);

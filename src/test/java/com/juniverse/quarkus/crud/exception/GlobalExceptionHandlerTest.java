@@ -34,19 +34,19 @@ class GlobalExceptionHandlerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         exceptionHandler = new GlobalExceptionHandler();
-        // Inject the mock UriInfo using reflection or setter if available
-        // For now, we'll test without UriInfo injection
+        // Inyecta el UriInfo simulado por reflexión o con el setter, si existe
+        // Por ahora se prueba sin inyectar UriInfo
     }
 
     @Test
     void testHandleBusinessException() {
-        // Given
+        // Dado
         BusinessException businessException = new BusinessException("Test business error");
 
-        // When
+        // Cuando
         Response response = exceptionHandler.toResponse(businessException);
 
-        // Then
+        // Entonces
         assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
         ErrorResponse errorResponse = (ErrorResponse) response.getEntity();
         assertEquals("Test business error", errorResponse.message);
@@ -56,17 +56,17 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleConstraintViolationException() {
-        // Given
+        // Dado
         Set<ConstraintViolation<Object>> violations = new HashSet<>();
         when(constraintViolation.getMessage()).thenReturn("Validation error message");
         violations.add(constraintViolation);
         
         ConstraintViolationException validationException = new ConstraintViolationException("Validation failed", violations);
 
-        // When
+        // Cuando
         Response response = exceptionHandler.toResponse(validationException);
 
-        // Then
+        // Entonces
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         ErrorResponse errorResponse = (ErrorResponse) response.getEntity();
         assertEquals("Errores de validación", errorResponse.message);
@@ -78,13 +78,13 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleGenericException() {
-        // Given
+        // Dado
         RuntimeException genericException = new RuntimeException("Generic error");
 
-        // When
+        // Cuando
         Response response = exceptionHandler.toResponse(genericException);
 
-        // Then
+        // Entonces
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
         ErrorResponse errorResponse = (ErrorResponse) response.getEntity();
         assertEquals("Error interno del servidor", errorResponse.message);
@@ -94,14 +94,14 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testBusinessExceptionWithCause() {
-        // Given
+        // Dado
         Exception cause = new Exception("Root cause");
         BusinessException businessException = new BusinessException("Business error with cause", cause);
 
-        // When
+        // Cuando
         Response response = exceptionHandler.toResponse(businessException);
 
-        // Then
+        // Entonces
         assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
         ErrorResponse errorResponse = (ErrorResponse) response.getEntity();
         assertEquals("Business error with cause", errorResponse.message);
@@ -110,7 +110,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testMultipleValidationErrors() {
-        // Given
+        // Dado
         Set<ConstraintViolation<Object>> violations = new HashSet<>();
         
         ConstraintViolation<Object> violation1 = mock(ConstraintViolation.class);
@@ -123,10 +123,10 @@ class GlobalExceptionHandlerTest {
         
         ConstraintViolationException validationException = new ConstraintViolationException("Multiple validation errors", violations);
 
-        // When
+        // Cuando
         Response response = exceptionHandler.toResponse(validationException);
 
-        // Then
+        // Entonces
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         ErrorResponse errorResponse = (ErrorResponse) response.getEntity();
         assertEquals("Errores de validación", errorResponse.message);

@@ -17,10 +17,10 @@ class CreateUserDTOTest {
 
     @Test
     void testDefaultConstructor() {
-        // Given & When
+        // Dado y cuando
         CreateUserDTO newCreateUserDTO = new CreateUserDTO();
 
-        // Then
+        // Entonces
         assertNull(newCreateUserDTO.name);
         assertNull(newCreateUserDTO.email);
         assertNull(newCreateUserDTO.phone);
@@ -29,16 +29,16 @@ class CreateUserDTOTest {
 
     @Test
     void testParameterizedConstructor() {
-        // Given
+        // Dado
         String name = "Test User";
         String email = "test@email.com";
         String phone = "123-456-7890";
         String city = "Test City";
 
-        // When
+        // Cuando
         CreateUserDTO newCreateUserDTO = new CreateUserDTO(name, email, phone, city);
 
-        // Then
+        // Entonces
         assertEquals(name, newCreateUserDTO.name);
         assertEquals(email, newCreateUserDTO.email);
         assertEquals(phone, newCreateUserDTO.phone);
@@ -47,10 +47,10 @@ class CreateUserDTOTest {
 
     @Test
     void testParameterizedConstructorWithNullValues() {
-        // Given & When
+        // Dado y cuando
         CreateUserDTO newCreateUserDTO = new CreateUserDTO("Test User", "test@email.com", null, null);
 
-        // Then
+        // Entonces
         assertEquals("Test User", newCreateUserDTO.name);
         assertEquals("test@email.com", newCreateUserDTO.email);
         assertNull(newCreateUserDTO.phone);
@@ -59,13 +59,13 @@ class CreateUserDTOTest {
 
     @Test
     void testFieldAssignment() {
-        // Given & When
+        // Dado y cuando
         createUserDTO.name = "Assigned User";
         createUserDTO.email = "assigned@email.com";
         createUserDTO.phone = "555-0000";
         createUserDTO.city = "Assigned City";
 
-        // Then
+        // Entonces
         assertEquals("Assigned User", createUserDTO.name);
         assertEquals("assigned@email.com", createUserDTO.email);
         assertEquals("555-0000", createUserDTO.phone);
@@ -74,13 +74,13 @@ class CreateUserDTOTest {
 
     @Test
     void testEmptyStringValues() {
-        // Given & When
+        // Dado y cuando
         createUserDTO.name = "";
         createUserDTO.email = "";
         createUserDTO.phone = "";
         createUserDTO.city = "";
 
-        // Then
+        // Entonces
         assertEquals("", createUserDTO.name);
         assertEquals("", createUserDTO.email);
         assertEquals("", createUserDTO.phone);
@@ -89,10 +89,10 @@ class CreateUserDTOTest {
 
     @Test
     void testWithRequiredFieldsOnly() {
-        // Given & When
+        // Dado y cuando
         CreateUserDTO minimalDTO = new CreateUserDTO("Required User", "required@email.com", null, null);
 
-        // Then
+        // Entonces
         assertEquals("Required User", minimalDTO.name);
         assertEquals("required@email.com", minimalDTO.email);
         assertNull(minimalDTO.phone);
@@ -101,19 +101,19 @@ class CreateUserDTOTest {
 
     @Test
     void testWithMaxLengthValues() {
-        // Given
+        // Dado
         String maxName = "a".repeat(50);
         String longEmail = "a".repeat(90) + "@test.com"; // Close to limit
         String maxPhone = "1".repeat(20);
         String maxCity = "C".repeat(100);
 
-        // When
+        // Cuando
         createUserDTO.name = maxName;
         createUserDTO.email = longEmail;
         createUserDTO.phone = maxPhone;
         createUserDTO.city = maxCity;
 
-        // Then
+        // Entonces
         assertEquals(50, createUserDTO.name.length());
         assertTrue(createUserDTO.email.length() <= 100);
         assertEquals(20, createUserDTO.phone.length());

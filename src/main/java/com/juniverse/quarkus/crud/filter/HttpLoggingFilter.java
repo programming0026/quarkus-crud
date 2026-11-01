@@ -63,7 +63,7 @@ public class HttpLoggingFilter implements ContainerRequestFilter, ContainerRespo
             requestLog.append("\n║ URI: ").append(uri);
             requestLog.append("\n║ Content-Type: ").append(contentType != null ? contentType : "N/A");
             
-            // Log all request headers
+            // Registra encabezados de petición todos.
             requestLog.append("\n║");
             requestLog.append("\n║ REQUEST HEADERS:");
             MultivaluedMap<String, String> requestHeaders = requestContext.getHeaders();
@@ -126,7 +126,7 @@ public class HttpLoggingFilter implements ContainerRequestFilter, ContainerRespo
             responseLog.append("\n║ Content-Type: ").append(contentType != null ? contentType : "N/A");
             responseLog.append("\n║ Duration: ").append(duration).append("ms");
             
-            // Log all response headers
+            // Registra encabezados de respuesta todos.
             responseLog.append("\n║");
             responseLog.append("\n║ RESPONSE HEADERS:");
             MultivaluedMap<String, Object> responseHeaders = responseContext.getHeaders();
@@ -194,7 +194,7 @@ public class HttpLoggingFilter implements ContainerRequestFilter, ContainerRespo
             JsonNode jsonNode = objectMapper.readTree(jsonString);
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
         } catch (Exception e) {
-            // If it's not valid JSON, return as-is
+            // Si no es JSON válido, se devuelve tal cual
             return jsonString;
         }
     }

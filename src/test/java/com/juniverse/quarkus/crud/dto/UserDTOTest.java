@@ -19,10 +19,10 @@ class UserDTOTest {
 
     @Test
     void testDefaultConstructor() {
-        // Given & When
+        // Dado y cuando
         UserDTO newUserDTO = new UserDTO();
 
-        // Then
+        // Entonces
         assertNull(newUserDTO.id);
         assertNull(newUserDTO.name);
         assertNull(newUserDTO.email);
@@ -34,7 +34,7 @@ class UserDTOTest {
 
     @Test
     void testParameterizedConstructor() {
-        // Given
+        // Dado
         Long id = 1L;
         String name = "Test User";
         String email = "test@email.com";
@@ -43,10 +43,10 @@ class UserDTOTest {
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime updatedAt = LocalDateTime.now();
 
-        // When
+        // Cuando
         UserDTO newUserDTO = new UserDTO(id, name, email, phone, city, createdAt, updatedAt);
 
-        // Then
+        // Entonces
         assertEquals(id, newUserDTO.id);
         assertEquals(name, newUserDTO.name);
         assertEquals(email, newUserDTO.email);
@@ -58,10 +58,10 @@ class UserDTOTest {
 
     @Test
     void testParameterizedConstructorWithNullValues() {
-        // Given & When
+        // Dado y cuando
         UserDTO newUserDTO = new UserDTO(1L, "Test User", "test@email.com", null, null, null, null);
 
-        // Then
+        // Entonces
         assertEquals(1L, newUserDTO.id);
         assertEquals("Test User", newUserDTO.name);
         assertEquals("test@email.com", newUserDTO.email);
@@ -73,10 +73,10 @@ class UserDTOTest {
 
     @Test
     void testFieldAssignment() {
-        // Given
+        // Dado
         LocalDateTime now = LocalDateTime.now();
 
-        // When
+        // Cuando
         userDTO.id = 123L;
         userDTO.name = "Assigned User";
         userDTO.email = "assigned@email.com";
@@ -85,7 +85,7 @@ class UserDTOTest {
         userDTO.createdAt = now;
         userDTO.updatedAt = now;
 
-        // Then
+        // Entonces
         assertEquals(123L, userDTO.id);
         assertEquals("Assigned User", userDTO.name);
         assertEquals("assigned@email.com", userDTO.email);
@@ -97,15 +97,15 @@ class UserDTOTest {
 
     @Test
     void testTimestampComparison() {
-        // Given
+        // Dado
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime updatedAt = createdAt.plusHours(1);
 
-        // When
+        // Cuando
         userDTO.createdAt = createdAt;
         userDTO.updatedAt = updatedAt;
 
-        // Then
+        // Entonces
         assertTrue(userDTO.updatedAt.isAfter(userDTO.createdAt));
         assertFalse(userDTO.createdAt.isAfter(userDTO.updatedAt));
     }
