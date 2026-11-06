@@ -13,8 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.servers.Server;
                 version = "1.0.0",
                 description = "API REST para operaciones CRUD con usuarios utilizando Quarkus, MySQL y Swagger",
                 contact = @Contact(
-                        name = "API Support",
-                        email = "support@example.com"
+                        name = "Java Universe",
+                        url = "https://github.com/programming0026"
                 ),
                 license = @License(
                         name = "MIT License",
